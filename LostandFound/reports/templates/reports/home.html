@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lost & Found</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-[#1F2937] min-h-screen flex flex-col items-center justify-center p-8 relative">
+
+  {% if user.is_authenticated %}
+    <!-- Logout button placed in the top-right corner -->
+    <form action="{% url 'logout' %}" method="post" class="absolute top-4 right-4">
+        {% csrf_token %}
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+          Logout
+        </button>
+    </form>
+  {% else %}
+    <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+      Login
+    </a>
+  {% endif %}
+
+  <header class="mb-10 text-center">
+    <h1 class="text-4xl font-bold text-[#111827]">Lost & Found</h1>
+    <p class="mt-2 text-lg text-[#1F2937]">Helping you reconnect with your lost belongings</p>
+  </header>
+
+  <main class="w-full max-w-2xl bg-[#F9FAFB] rounded-2xl p-6 shadow-lg">
+    <div class="flex justify-center space-x-6">
+      <a href="{% url 'report_lostitem' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition">
+        Report Lost Item
+      </a>
+      <a href="{% url 'general_report_found_item' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition">
+        Report Found Item
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-10 text-sm text-gray-500 text-center">
+    &copy; 2025 Lost & Found Service. All rights reserved.
+  </footer>
+
+</body>
+</html>
+
