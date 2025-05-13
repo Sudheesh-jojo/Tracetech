@@ -90,6 +90,11 @@ DATABASES = {
 
 }
 
+
+import pymysql
+pymysql.install_as_MySQLdb()
+
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'ddyyaiscj',
     'API_KEY': '321554372413895',
