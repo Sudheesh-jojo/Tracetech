@@ -3,6 +3,7 @@ import requests
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+import imagehash
 
 from .models import Lost,Found,MatchedItem
 import cloudinary.uploader
@@ -135,7 +136,25 @@ def colorhistogram(image_url):
     cv2.normalize(hist_g, hist_g)
     cv2.normalize(hist_b, hist_b)
     return hist_r,hist_g,hist_b
-
+def image_hash_similarity(image_url1, image_url2):
+    try:
+        response1 = requests.get(image_url1, timeout=5)
+        response2 = requests.get(image_url2, timeout=5)
+        
+        img1 = Image.open(BytesIO(response1.content)).convert('L').resize((256, 256))
+        img2 = Image.open(BytesIO(response2.content)).convert('L').resize((256, 256))
+        
+        hash1 = imagehash.phash(img1)
+        hash2 = imagehash.phash(img2)
+        
+        hash_diff = hash1 - hash2 
+        max_bits = len(hash1.hash) ** 2  
+        
+        shape_similarity = (1 - (hash_diff / max_bits)) * 100  # Convert to percentage
+        return shape_similarity
+    except Exception as e:
+        print(f"Hash comparison error: {e}")
+        return 0
 def check_items(request, lost_item_id,):
     selected_lost_item = Lost.objects.get(id=lost_item_id)
     matches = []
@@ -148,6 +167,7 @@ def check_items(request, lost_item_id,):
         location_match = selected_lost_item.location.lower() == found.location.lower()
         category_match = selected_lost_item.category.lower() == found.category.lower()
         date_match = selected_lost_item.date== found.date
+        
         
 
         if similarity >=40 and (location_match or category_match or date_match):
@@ -167,10 +187,11 @@ def comparedetails(desc1,desc2,image_url1,image_url2):
     similarity_r = cv2.compareHist(r1,r2,cv2.HISTCMP_CORREL)
     similarity_g = cv2.compareHist(g1,g2,cv2.HISTCMP_CORREL)
     similarity_b = cv2.compareHist(b1,b2,cv2.HISTCMP_CORREL)
+    
     img_similarity=((similarity_r+similarity_g+similarity_b)/3)
     img_similarity = (img_similarity + 1) * 50
-    
-    similarity = (0.4 * txt_similarity) + (0.6 * img_similarity)
+    shape_similarity = image_hash_similarity(image_url1, image_url2)
+    similarity = (0.3 * txt_similarity) + (0.4 * img_similarity) + (0.3 * shape_similarity)
     return similarity
 
 def success2(request,lost_item_id,found_item_id):
