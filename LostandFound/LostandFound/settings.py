@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'LostandFound.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'tracetech', 
-        'USER': 'rootsudheesh',  
-        'PASSWORD':'mani2141',  
-        'HOST': 'localhost', 
+        'USER': 'admin',  
+        'PASSWORD':'tracetech1234',  
+        'HOST': 'tracetech.c34oeu0cqmvp.eu-north-1.rds.amazonaws.com', 
         'PORT': '3306',  
     }
 
