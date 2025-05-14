@@ -150,7 +150,7 @@ def image_hash_similarity(image_url1, image_url2):
         hash_diff = hash1 - hash2 
         max_bits = len(hash1.hash) ** 2  
         
-        shape_similarity = (1 - (hash_diff / max_bits)) * 100  # Convert to percentage
+        shape_similarity = (1 - (hash_diff / max_bits)) * 100  
         return shape_similarity
     except Exception as e:
         print(f"Hash comparison error: {e}")
