@@ -170,7 +170,7 @@ def check_items(request, lost_item_id,):
         
         
 
-        if similarity >=40 and (location_match or category_match or date_match):
+        if similarity >=80 and (location_match or category_match or date_match):
             found.similarity=similarity
             matches.append(found)
     return render(request, 'reports/check.html', {
